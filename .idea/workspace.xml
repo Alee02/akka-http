@@ -73,12 +73,21 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/scala/com/dp/JwtAuthorization.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="47" column="41" selection-start-line="47" selection-start-column="41" selection-end-line="47" selection-end-column="41" />
+            <state relative-caret-position="221">
+              <caret line="57" column="98" selection-start-line="57" selection-start-column="98" selection-end-line="57" selection-end-column="98" />
               <folding>
                 <element signature="e#16#52#0" expanded="true" />
                 <element signature="e#661#685#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/.ivy2/cache/com.pauldijou/jwt-spray-json_2.12/srcs/jwt-spray-json_2.12-2.1.0-sources.jar!/JwtSprayJson.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="188">
+              <caret line="22" column="7" selection-start-line="22" selection-start-column="7" selection-end-line="22" selection-end-column="7" />
             </state>
           </provider>
         </entry>
@@ -262,7 +271,14 @@
       <option name="project" value="LOCAL" />
       <updated>1560079994628</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="implemented createToken and checkpassword methods">
+      <created>1560080519296</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1560080519296</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -304,7 +320,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial App set-up for JWT authorization" />
     <MESSAGE value="Created login and auth routes with potential itility methods for jwt token" />
-    <option name="LAST_COMMIT_MESSAGE" value="Created login and auth routes with potential itility methods for jwt token" />
+    <MESSAGE value="implemented createToken and checkpassword methods" />
+    <option name="LAST_COMMIT_MESSAGE" value="implemented createToken and checkpassword methods" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/main/scala/com/dp/AkkaQuickstart.scala" />
@@ -342,10 +359,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://$USER_HOME$/.ivy2/cache/com.pauldijou/jwt-spray-json_2.12/srcs/jwt-spray-json_2.12-2.1.0-sources.jar!/JwtSprayJson.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="188">
+          <caret line="22" column="7" selection-start-line="22" selection-start-column="7" selection-end-line="22" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/com/dp/JwtAuthorization.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="47" column="41" selection-start-line="47" selection-start-column="41" selection-end-line="47" selection-end-column="41" />
+        <state relative-caret-position="221">
+          <caret line="57" column="98" selection-start-line="57" selection-start-column="98" selection-end-line="57" selection-end-column="98" />
           <folding>
             <element signature="e#16#52#0" expanded="true" />
             <element signature="e#661#685#0" expanded="true" />
