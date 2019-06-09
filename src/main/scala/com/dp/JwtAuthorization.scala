@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import akka.http.scaladsl.model.{HttpResponse, StatusCode, StatusCodes}
+import akka.http.scaladsl.model._
 import akka.http.scaladsl.model.headers.RawHeader
 import akka.stream.ActorMaterializer
 import akka.http.scaladsl.server.Directives._
@@ -79,11 +79,16 @@ object JwtAuthorization extends App with SprayJsonSupport {
     (path("secureEndpoint") & get) {
       optionalHeaderValueByName("Authorization") {
         case Some(token) =>
-          if (isTokenExpired(token)) {
-            complete(HttpResponse(status = StatusCodes.Unauthorized, entity = "Token expired."))
-          } else if (isTokenValid(token)) {
-            // note: in actual app this would be some data that the user would access instead of just displaying a message.
-            complete("User accessed authorized endpoint!")
+          if (isTokenValid(token)) {
+            if (isTokenExpired(token)) {
+              complete(HttpResponse(status = StatusCodes.Unauthorized, entity = "Token expired."))
+            } else {
+              // note: in actual app this would be some data that the user would access instead of just displaying a message.
+              complete(HttpResponse(StatusCodes.OK, entity = HttpEntity(
+                ContentTypes.`application/json`,
+                """{"success": "User accessed authorized endpoint!"}"""
+              )))
+            }
           } else {
             complete(HttpResponse(status = StatusCodes.Unauthorized, entity = "Token is invalid, or has been tampered with"))
           }
