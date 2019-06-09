@@ -13,22 +13,26 @@ import pdi.jwt.{JwtAlgorithm, JwtClaim, JwtSprayJson}
 import spray.json._
 
 import scala.util.{Failure, Success}
+
 object SecurityDomain extends DefaultJsonProtocol {
+
   case class LoginRequest(username: String, password: String)
+
   implicit val loginRequestFormat: RootJsonFormat[LoginRequest] = jsonFormat2(LoginRequest)
 }
 
 // extend SprayJsonSupport we get implicit unmarshaller
-object JwtAuthorization extends App with SprayJsonSupport{
+object JwtAuthorization extends App with SprayJsonSupport {
 
   implicit val system: ActorSystem = ActorSystem()
   implicit val materializer: ActorMaterializer = ActorMaterializer()
+
   import system.dispatcher
   import SecurityDomain._
 
   val superSecretPasswordDb = Map(
     "admin" -> "admin",
-    "ali" -> "scalaRocks1"
+    "daniel" -> "scalaRocks1"
   )
 
   val algorithm = JwtAlgorithm.HS256
@@ -40,7 +44,7 @@ object JwtAuthorization extends App with SprayJsonSupport{
     superSecretPasswordDb.contains(username) && superSecretPasswordDb(username) == password
   }
 
-  def createToken(username: String, experiationPeriodInDays: Int): String  = {
+  def createToken(username: String, experiationPeriodInDays: Int): String = {
     val claims = JwtClaim(
       expiration = Some(System.currentTimeMillis() / 1000 + TimeUnit.DAYS.toSeconds(experiationPeriodInDays)),
       issuedAt = Some(System.currentTimeMillis() / 1000),
@@ -51,11 +55,11 @@ object JwtAuthorization extends App with SprayJsonSupport{
   }
 
   def isTokenExpired(token: String): Boolean = JwtSprayJson.decode(token, secretKey, Seq(algorithm)) match {
-    case Success(value) => value.expiration.getOrElse(0) < System.currentTimeMillis() / 1000
+    case Success(value) => value.expiration.getOrElse(0L) < System.currentTimeMillis() / 1000
     case Failure(_) => true
   }
 
-  def isTokenValid(token: String): Boolean= JwtSprayJson.isValid(token, secretKey, Seq(algorithm))
+  def isTokenValid(token: String): Boolean = JwtSprayJson.isValid(token, secretKey, Seq(algorithm))
 
   val loginRoute =
     post {
@@ -74,17 +78,24 @@ object JwtAuthorization extends App with SprayJsonSupport{
   val authenticatedRoute =
     (path("secureEndpoint") & get) {
       optionalHeaderValueByName("Authorization") {
-        case Some(token) if isTokenExpired(token) =>
-          complete(HttpResponse(status = StatusCodes.Unauthorized, entity = "Token expired."))
-        case Some(token) if isTokenValid(token) =>
-          // note: in actual app this would be some data that the user would access instead of just displaying a message.
-          complete("User accessed authorized endpoint!")
-        case _ => complete(HttpResponse(status = StatusCodes.Unauthorized, entity = "Token is invalid, or has been tampered with"))
+        case Some(token) =>
+          if (isTokenExpired(token)) {
+            complete(HttpResponse(status = StatusCodes.Unauthorized, entity = "Token expired."))
+          } else if (isTokenValid(token)) {
+            // note: in actual app this would be some data that the user would access instead of just displaying a message.
+            complete("User accessed authorized endpoint!")
+          } else {
+            complete(HttpResponse(status = StatusCodes.Unauthorized, entity = "Token is invalid, or has been tampered with"))
+          }
+        case _ => complete(HttpResponse(status = StatusCodes.Unauthorized, entity = "No Token is provided"))
       }
     }
 
   // chained route so it always go through login Route
   val route = loginRoute ~ authenticatedRoute
 
-  Http().bindAndHandle(route, "localhost", 8080)
+  Http().bindAndHandle(route, "localhost", 8080).onComplete {
+    case Success(value) => println("Server runnong on port 8080")
+    case Failure(e) => println(s"Failed to load server: $e")
+  }
 }
